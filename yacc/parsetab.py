@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ID NUMBERprograma : asignacion ";"\n                | asignacion ";" programaasignacion : ID "=" NUMBER'
+_lr_signature = 'NEWLINE NUMBERprogram : line\n                   | line NEWLINE programline : plus\n                | minusplus : NUMBER "+" NUMBERminus : NUMBER "-" NUMBER'
     
-_lr_action_items = {'ID':([0,4,],[3,3,]),'$end':([1,4,6,],[0,-1,-2,]),';':([2,7,],[4,-3,]),'=':([3,],[5,]),'NUMBER':([5,],[7,]),}
+_lr_action_items = {'NUMBER':([0,6,7,8,],[5,5,10,11,]),'$end':([1,2,3,4,9,10,11,],[0,-1,-3,-4,-2,-5,-6,]),'NEWLINE':([2,3,4,10,11,],[6,-3,-4,-5,-6,]),'+':([5,],[7,]),'-':([5,],[8,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'programa':([0,4,],[1,6,]),'asignacion':([0,4,],[2,2,]),}
+_lr_goto_items = {'program':([0,6,],[1,9,]),'line':([0,6,],[2,2,]),'plus':([0,6,],[3,3,]),'minus':([0,6,],[4,4,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,8 +26,11 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> programa","S'",1,None,None,None),
-  ('programa -> asignacion ;','programa',2,'p_programa','e1.py',37),
-  ('programa -> asignacion ; programa','programa',3,'p_programa','e1.py',38),
-  ('asignacion -> ID = NUMBER','asignacion',3,'p_asignacion','e1.py',47),
+  ("S' -> program","S'",1,None,None,None),
+  ('program -> line','program',1,'p_program','e2_parser.py',12),
+  ('program -> line NEWLINE program','program',3,'p_program','e2_parser.py',13),
+  ('line -> plus','line',1,'p_line','e2_parser.py',16),
+  ('line -> minus','line',1,'p_line','e2_parser.py',17),
+  ('plus -> NUMBER + NUMBER','plus',3,'p_plus','e2_parser.py',22),
+  ('minus -> NUMBER - NUMBER','minus',3,'p_minus','e2_parser.py',26),
 ]

@@ -2,90 +2,138 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Grammar
 
-Rule 0     S' -> programa
-Rule 1     programa -> asignacion ;
-Rule 2     programa -> asignacion ; programa
-Rule 3     asignacion -> ID = NUMBER
+Rule 0     S' -> program
+Rule 1     program -> line
+Rule 2     program -> line NEWLINE program
+Rule 3     line -> plus
+Rule 4     line -> minus
+Rule 5     plus -> NUMBER + NUMBER
+Rule 6     minus -> NUMBER - NUMBER
 
 Terminals, with rules where they appear
 
-;                    : 1 2
-=                    : 3
-ID                   : 3
-NUMBER               : 3
++                    : 5
+-                    : 6
+NEWLINE              : 2
+NUMBER               : 5 5 6 6
 error                : 
 
 Nonterminals, with rules where they appear
 
-asignacion           : 1 2
-programa             : 2 0
+line                 : 1 2
+minus                : 4
+plus                 : 3
+program              : 2 0
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . programa
-    (1) programa -> . asignacion ;
-    (2) programa -> . asignacion ; programa
-    (3) asignacion -> . ID = NUMBER
+    (0) S' -> . program
+    (1) program -> . line
+    (2) program -> . line NEWLINE program
+    (3) line -> . plus
+    (4) line -> . minus
+    (5) plus -> . NUMBER + NUMBER
+    (6) minus -> . NUMBER - NUMBER
 
-    ID              shift and go to state 3
+    NUMBER          shift and go to state 5
 
-    programa                       shift and go to state 1
-    asignacion                     shift and go to state 2
+    program                        shift and go to state 1
+    line                           shift and go to state 2
+    plus                           shift and go to state 3
+    minus                          shift and go to state 4
 
 state 1
 
-    (0) S' -> programa .
+    (0) S' -> program .
 
 
 
 state 2
 
-    (1) programa -> asignacion . ;
-    (2) programa -> asignacion . ; programa
+    (1) program -> line .
+    (2) program -> line . NEWLINE program
 
-    ;               shift and go to state 4
+    $end            reduce using rule 1 (program -> line .)
+    NEWLINE         shift and go to state 6
 
 
 state 3
 
-    (3) asignacion -> ID . = NUMBER
+    (3) line -> plus .
 
-    =               shift and go to state 5
+    NEWLINE         reduce using rule 3 (line -> plus .)
+    $end            reduce using rule 3 (line -> plus .)
 
 
 state 4
 
-    (1) programa -> asignacion ; .
-    (2) programa -> asignacion ; . programa
-    (1) programa -> . asignacion ;
-    (2) programa -> . asignacion ; programa
-    (3) asignacion -> . ID = NUMBER
+    (4) line -> minus .
 
-    $end            reduce using rule 1 (programa -> asignacion ; .)
-    ID              shift and go to state 3
+    NEWLINE         reduce using rule 4 (line -> minus .)
+    $end            reduce using rule 4 (line -> minus .)
 
-    asignacion                     shift and go to state 2
-    programa                       shift and go to state 6
 
 state 5
 
-    (3) asignacion -> ID = . NUMBER
+    (5) plus -> NUMBER . + NUMBER
+    (6) minus -> NUMBER . - NUMBER
 
-    NUMBER          shift and go to state 7
+    +               shift and go to state 7
+    -               shift and go to state 8
 
 
 state 6
 
-    (2) programa -> asignacion ; programa .
+    (2) program -> line NEWLINE . program
+    (1) program -> . line
+    (2) program -> . line NEWLINE program
+    (3) line -> . plus
+    (4) line -> . minus
+    (5) plus -> . NUMBER + NUMBER
+    (6) minus -> . NUMBER - NUMBER
 
-    $end            reduce using rule 2 (programa -> asignacion ; programa .)
+    NUMBER          shift and go to state 5
 
+    line                           shift and go to state 2
+    program                        shift and go to state 9
+    plus                           shift and go to state 3
+    minus                          shift and go to state 4
 
 state 7
 
-    (3) asignacion -> ID = NUMBER .
+    (5) plus -> NUMBER + . NUMBER
 
-    ;               reduce using rule 3 (asignacion -> ID = NUMBER .)
+    NUMBER          shift and go to state 10
+
+
+state 8
+
+    (6) minus -> NUMBER - . NUMBER
+
+    NUMBER          shift and go to state 11
+
+
+state 9
+
+    (2) program -> line NEWLINE program .
+
+    $end            reduce using rule 2 (program -> line NEWLINE program .)
+
+
+state 10
+
+    (5) plus -> NUMBER + NUMBER .
+
+    NEWLINE         reduce using rule 5 (plus -> NUMBER + NUMBER .)
+    $end            reduce using rule 5 (plus -> NUMBER + NUMBER .)
+
+
+state 11
+
+    (6) minus -> NUMBER - NUMBER .
+
+    NEWLINE         reduce using rule 6 (minus -> NUMBER - NUMBER .)
+    $end            reduce using rule 6 (minus -> NUMBER - NUMBER .)
 
