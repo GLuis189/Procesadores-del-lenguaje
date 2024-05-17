@@ -1,3 +1,5 @@
-a = "0b1010"
+a = {"hola": "a"}
+b = {("hola", 3): "b"}
 
-print()
+print(a)
+print(b)
